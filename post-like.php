@@ -2,7 +2,7 @@
 --------------------------------------------------------------------------------
 Plugin Name: WordPress Post Like System
 Description: A simple and efficient post like system for WordPress.
-Version: 0.5.2
+Version: 0.6
 Author: Jon Masterson
 Author URI: http://jonmasterson.com/
 License: GPLv2 or later (license.txt)
@@ -22,6 +22,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --------------------------------------------------------------------------------
 */
+
+// set our version here
+define( 'WP_POST_LIKE_SYSTEM_VERSION', '0.6' );
 
 /**
  * Register the stylesheets for the public-facing side of the site.
