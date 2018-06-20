@@ -25,7 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
  * Register the stylesheets for the public-facing side of the site.
- * @since    0.5
+ *
+ * @since 0.5
  */
 add_action( 'wp_enqueue_scripts', 'sl_enqueue_scripts' );
 function sl_enqueue_scripts() {
@@ -38,8 +39,9 @@ function sl_enqueue_scripts() {
 }
 
 /**
- * Processes like/unlike
- * @since    0.5
+ * Processes like/unlike requests.
+ *
+ * @since 0.5
  */
 add_action( 'wp_ajax_nopriv_process_simple_like', 'process_simple_like' );
 add_action( 'wp_ajax_process_simple_like', 'process_simple_like' );
@@ -168,8 +170,13 @@ function process_simple_like() {
 }
 
 /**
- * Utility to test if the post is already liked
- * @since    0.5
+ * Utility to test if the post is already liked.
+ *
+ * @since 0.5
+ *
+ * @param int $post_id The numeric ID of the WordPress post.
+ * @param bool $is_comment True if the context is a comment, false if for a post.
+ * @return bool True if already liked, false otherwise.
  */
 function already_liked( $post_id, $is_comment ) {
 	$post_users = NULL;
@@ -195,8 +202,13 @@ function already_liked( $post_id, $is_comment ) {
 } // already_liked()
 
 /**
- * Output the like button
- * @since    0.5
+ * Output the like button.
+ *
+ * @since 0.5
+ *
+ * @param int $post_id The numeric ID of the WordPress post.
+ * @param bool $is_comment True if the context is a comment, false if for a post.
+ * @return str $output The like button markup.
  */
 function get_simple_likes_button( $post_id, $is_comment = NULL ) {
 	$is_comment = ( NULL == $is_comment ) ? 0 : 1;
@@ -233,8 +245,11 @@ function get_simple_likes_button( $post_id, $is_comment = NULL ) {
 } // get_simple_likes_button()
 
 /**
- * Processes shortcode to manually add the button to posts
- * @since    0.5
+ * Processes shortcode to manually add the button to posts.
+ *
+ * @since 0.5
+ *
+ * @return str The like button markup.
  */
 add_shortcode( 'jmliker', 'sl_shortcode' );
 function sl_shortcode() {
@@ -242,9 +257,14 @@ function sl_shortcode() {
 } // shortcode()
 
 /**
- * Utility retrieves post meta user likes (user id array),
- * then adds new user id to retrieved array
- * @since    0.5
+ * Retrieves IDs of users who liked an item then adds new user id to retrieved array.
+ *
+ * @since 0.5
+ *
+ * @param int $user_id The numeric ID of the WordPress user.
+ * @param int $post_id The numeric ID of the WordPress post.
+ * @param bool $is_comment True if the context is a comment, false if for a post.
+ * @return array $post_users The array of user IDs who liked the item.
  */
 function post_user_likes( $user_id, $post_id, $is_comment ) {
 	$post_users = '';
@@ -262,9 +282,14 @@ function post_user_likes( $user_id, $post_id, $is_comment ) {
 } // post_user_likes()
 
 /**
- * Utility retrieves post meta ip likes (ip array),
- * then adds new ip to retrieved array
- * @since    0.5
+ * Retrieves IPs of users who liked an item then adds new ip to retrieved array.
+ *
+ * @since 0.5
+ *
+ * @param str $user_ip The IP of the WordPress user.
+ * @param int $post_id The numeric ID of the WordPress post.
+ * @param bool $is_comment True if the context is a comment, false if for a post.
+ * @return array $post_users The array of user IDs who liked the item.
  */
 function post_ip_likes( $user_ip, $post_id, $is_comment ) {
 	$post_users = '';
@@ -283,8 +308,11 @@ function post_ip_likes( $user_ip, $post_id, $is_comment ) {
 } // post_ip_likes()
 
 /**
- * Utility to retrieve IP address
- * @since    0.5
+ * Utility to retrieve IP address.
+ *
+ * @since 0.5
+ *
+ * @return str $ip The IP of the WordPress user.
  */
 function sl_get_ip() {
 	if ( isset( $_SERVER['HTTP_CLIENT_IP'] ) && ! empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
@@ -300,8 +328,11 @@ function sl_get_ip() {
 } // sl_get_ip()
 
 /**
- * Utility returns the button icon for "like" action
- * @since    0.5
+ * Utility returns the button icon for "like" action.
+ *
+ * @since 0.5
+ *
+ * @return str $icon The markup of the liked icon.
  */
 function get_liked_icon() {
 	/* If already using Font Awesome with your theme, replace svg with: <i class="fa fa-heart"></i> */
@@ -310,8 +341,11 @@ function get_liked_icon() {
 } // get_liked_icon()
 
 /**
- * Utility returns the button icon for "unlike" action
- * @since    0.5
+ * Utility returns the button icon for "unlike" action,
+ *
+ * @since 0.5
+ *
+ * @return str $icon The markup of the unliked icon.
  */
 function get_unliked_icon() {
 	/* If already using Font Awesome with your theme, replace svg with: <i class="fa fa-heart-o"></i> */
@@ -320,12 +354,15 @@ function get_unliked_icon() {
 } // get_unliked_icon()
 
 /**
- * Utility function to format the button count,
- * appending "K" if one thousand or greater,
- * "M" if one million or greater,
- * and "B" if one billion or greater (unlikely).
- * $precision = how many decimal points to display (1.25K)
- * @since    0.5
+ * Utility function to format the button count appending:
+ *
+ * "K" if one thousand or greater,
+ * "M" if one million or greater, and
+ * "B" if one billion or greater (unlikely).
+ *
+ * The $precision variable determines how many decimal points to display (1.25K)
+ *
+ * @since 0.5
  */
 function sl_format_count( $number ) {
 	$precision = 2;
@@ -343,9 +380,12 @@ function sl_format_count( $number ) {
 } // sl_format_count()
 
 /**
- * Utility retrieves count plus count options,
- * returns appropriate format based on options
- * @since    0.5
+ * Retrieves markup for a particular count value.
+ *
+ * @since 0.5
+ *
+ * @param int $like_count The value of the like count.
+ * @param str $count The markup to display a count.
  */
 function get_like_count( $like_count ) {
 	$like_text = __( 'Like', 'YourThemeTextDomain' );
@@ -361,6 +401,14 @@ function get_like_count( $like_count ) {
 // User Profile List
 add_action( 'show_user_profile', 'show_user_likes' );
 add_action( 'edit_user_profile', 'show_user_likes' );
+
+/**
+ * Echoes markup showing liked items for a particular WordPress user.
+ *
+ * @since 0.5
+ *
+ * @param WP_User $user The WordPress user object.
+ */
 function show_user_likes( $user ) { ?>
 	<table class="form-table">
 		<tr>
