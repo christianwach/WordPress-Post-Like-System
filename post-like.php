@@ -711,7 +711,7 @@ class WP_Post_Like_System {
 			'meta_query' => array(
 				array(
 					'key' => '_user_liked',
-					'value' => $user->ID,
+					'value' => serialize( $user->ID ),
 					'compare' => 'LIKE'
 				)
 			)
