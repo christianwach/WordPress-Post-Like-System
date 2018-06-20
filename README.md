@@ -1,23 +1,20 @@
-WordPress-Post-Like-System
+WordPress Post Like System
 ==========================
 
-A simple and efficient post like system for WordPress. <a href="http://jonmasterson.com/post-like-demo/" target="_blank">View the demo.</a> 
-
-It's a bit outdated at this point, but check out <a href="http://hofmannsven.com/2013/laboratory/wordpress-post-like-system/" target="_blank">this post</a> on <a href="https://twitter.com/hofmannsven" target="_blank">Sven Hofmann's</a> site for more information.
+A simple and efficient post like system for WordPress. <a href="http://jonmasterson.com/post-like-demo/" target="_blank">View the demo.</a>
 
 <h3>Four Steps to Glory</h3>
-<ol>
-  <li>Add the CSS to your theme's main stylesheet.</li>
-  <li>Add the javascript file to your theme's <em>js</em> folder (if it exists). If there is no <em>js</em> folder at your theme's root level, create one and add <em>simple-likes-public.js</em> to it.</li>
-  <li>Add the contents of post-like.php to your theme's functions.php file.</li>
-  <li>Output the button by doing the following:
-    <ul>
-      <li>Add the button to any posts in your theme by adding the following function, <a href="https://developer.wordpress.org/themes/basics/the-loop/" target="_blank">within the loop</a> — <code>echo get_simple_likes_button( get_the_ID() );</code></li>
-	  <li>Add the button to any comments in your theme by making sure the second parameter in the button function is set to "1" — <code>echo get_simple_likes_button( get_comment_ID(), 1 );</code></li>
-      <li>Include the [jmliker] shortcode in your posts</li>
-    </ul>
-  </li>
-</ol>
+
+1. Extract the plugin archive
+1. Upload plugin files to your `/wp-content/plugins/` directory
+1. Enable the plugin
+1. Output the button by doing the following:
+
+<ul>
+  <li>Add the button to any posts in your theme by adding the following function, <a href="https://developer.wordpress.org/themes/basics/the-loop/" target="_blank">within the loop</a> — <code>echo get_simple_likes_button( get_the_ID() );</code></li>
+  <li>Add the button to any comments in your theme by making sure the second parameter in the button function is set to "1" — <code>echo get_simple_likes_button( get_comment_ID(), 1 );</code></li>
+  <li>Include the [jmliker] shortcode in your posts</li>
+</ul>
 
 <h3>Upgrades</h3>
 I've cleaned up a lot here, fixing a few errors, and making it easier to revise this system to suit your theme. Here are the highlights:
