@@ -1,12 +1,14 @@
-<?php
+<?php /*
+--------------------------------------------------------------------------------
+Plugin Name: WordPress Post Like System
+Description: A simple and efficient post like system for WordPress.
+Version: 0.5.2
+Author: Jon Masterson
+Author URI: http://jonmasterson.com/
+License: GPLv2 or later (license.txt)
+Text Domain: post-like
+Domain Path: /languages
 
-/*
-Name:  WordPress Post Like System
-Description:  A simple and efficient post like system for WordPress.
-Version:      0.5.2
-Author:       Jon Masterson
-Author URI:   http://jonmasterson.com/
-License:
 Copyright (C) 2015 Jon Masterson
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,6 +20,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
+--------------------------------------------------------------------------------
 */
 
 /**
@@ -31,7 +34,7 @@ function sl_enqueue_scripts() {
 		'ajaxurl' => admin_url( 'admin-ajax.php' ),
 		'like' => __( 'Like', 'YourThemeTextDomain' ),
 		'unlike' => __( 'Unlike', 'YourThemeTextDomain' )
-	) ); 
+	) );
 }
 
 /**
@@ -87,7 +90,7 @@ function process_simple_like() {
 				if ( $post_users ) {
 					if ( $is_comment == 1 ) {
 						update_comment_meta( $post_id, "_user_comment_IP", $post_users );
-					} else { 
+					} else {
 						update_post_meta( $post_id, "_user_IP", $post_users );
 					}
 				}
@@ -114,12 +117,12 @@ function process_simple_like() {
 					}
 				}
 				// Update Post
-				if ( $post_users ) {	
+				if ( $post_users ) {
 					$uid_key = array_search( $user_id, $post_users );
 					unset( $post_users[$uid_key] );
 					if ( $is_comment == 1 ) {
 						update_comment_meta( $post_id, "_user_comment_liked", $post_users );
-					} else { 
+					} else {
 						update_post_meta( $post_id, "_user_liked", $post_users );
 					}
 				}
@@ -132,7 +135,7 @@ function process_simple_like() {
 					unset( $post_users[$uip_key] );
 					if ( $is_comment == 1 ) {
 						update_comment_meta( $post_id, "_user_comment_IP", $post_users );
-					} else { 
+					} else {
 						update_post_meta( $post_id, "_user_IP", $post_users );
 					}
 				}
@@ -144,7 +147,7 @@ function process_simple_like() {
 		if ( $is_comment == 1 ) {
 			update_comment_meta( $post_id, "_comment_like_count", $like_count );
 			update_comment_meta( $post_id, "_comment_like_modified", date( 'Y-m-d H:i:s' ) );
-		} else { 
+		} else {
 			update_post_meta( $post_id, "_post_like_count", $like_count );
 			update_post_meta( $post_id, "_post_like_modified", date( 'Y-m-d H:i:s' ) );
 		}
@@ -179,7 +182,7 @@ function already_liked( $post_id, $is_comment ) {
 		}
 	} else { // user is anonymous
 		$user_id = sl_get_ip();
-		$post_meta_users = ( $is_comment == 1 ) ? get_comment_meta( $post_id, "_user_comment_IP" ) : get_post_meta( $post_id, "_user_IP" ); 
+		$post_meta_users = ( $is_comment == 1 ) ? get_comment_meta( $post_id, "_user_comment_IP" ) : get_post_meta( $post_id, "_user_IP" );
 		if ( count( $post_meta_users ) != 0 ) { // meta exists, set up values
 			$post_users = $post_meta_users[0];
 		}
@@ -239,7 +242,7 @@ function sl_shortcode() {
 } // shortcode()
 
 /**
- * Utility retrieves post meta user likes (user id array), 
+ * Utility retrieves post meta user likes (user id array),
  * then adds new user id to retrieved array
  * @since    0.5
  */
@@ -259,7 +262,7 @@ function post_user_likes( $user_id, $post_id, $is_comment ) {
 } // post_user_likes()
 
 /**
- * Utility retrieves post meta ip likes (ip array), 
+ * Utility retrieves post meta ip likes (ip array),
  * then adds new ip to retrieved array
  * @since    0.5
  */
@@ -340,13 +343,13 @@ function sl_format_count( $number ) {
 } // sl_format_count()
 
 /**
- * Utility retrieves count plus count options, 
+ * Utility retrieves count plus count options,
  * returns appropriate format based on options
  * @since    0.5
  */
 function get_like_count( $like_count ) {
 	$like_text = __( 'Like', 'YourThemeTextDomain' );
-	if ( is_numeric( $like_count ) && $like_count > 0 ) { 
+	if ( is_numeric( $like_count ) && $like_count > 0 ) {
 		$number = sl_format_count( $like_count );
 	} else {
 		$number = $like_text;
@@ -358,7 +361,7 @@ function get_like_count( $like_count ) {
 // User Profile List
 add_action( 'show_user_profile', 'show_user_likes' );
 add_action( 'edit_user_profile', 'show_user_likes' );
-function show_user_likes( $user ) { ?>        
+function show_user_likes( $user ) { ?>
 	<table class="form-table">
 		<tr>
 			<th><label for="user_likes"><?php _e( 'You Like:', 'YourThemeTextDomain' ); ?></label></th>
@@ -374,23 +377,23 @@ function show_user_likes( $user ) { ?>
 				  'value' => $user->ID,
 				  'compare' => 'LIKE'
 				)
-			  ) );		
+			  ) );
 			$sep = '';
 			$like_query = new WP_Query( $args );
 			if ( $like_query->have_posts() ) : ?>
 			<p>
-			<?php while ( $like_query->have_posts() ) : $like_query->the_post(); 
+			<?php while ( $like_query->have_posts() ) : $like_query->the_post();
 			echo $sep; ?><a href="<?php the_permalink(); ?>" title="<?php the_title_attribute(); ?>"><?php the_title(); ?></a>
 			<?php
 			$sep = ' &middot; ';
-			endwhile; 
+			endwhile;
 			?>
 			</p>
 			<?php else : ?>
 			<p><?php _e( 'You do not like anything yet.', 'YourThemeTextDomain' ); ?></p>
-			<?php 
-			endif; 
-			wp_reset_postdata(); 
+			<?php
+			endif;
+			wp_reset_postdata();
 			?>
 			</td>
 		</tr>
