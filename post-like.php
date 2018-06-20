@@ -635,19 +635,21 @@ class WP_Post_Like_System {
 		$like_query = new WP_Query( $args );
 
 		?>
+		<h2><?php _e( 'User Likes' ) ?></h2>
+
 		<table class="form-table">
 			<tr>
-				<th><label for="user_likes"><?php _e( 'You Like:', 'post-like' ); ?></label></th>
+				<th><label for="user_likes"><?php _e( 'User Likes', 'post-like' ); ?></label></th>
 				<td>
 				<?php if ( $like_query->have_posts() ) : ?>
 					<p>
-					<?php while ( $like_query->have_posts() ) : $like_query->the_post();
-						echo $sep; ?><a href="<?php the_permalink(); ?>" title="<?php the_title_attribute(); ?>"><?php the_title(); ?></a>
+					<?php while ( $like_query->have_posts() ) : $like_query->the_post(); ?>
+						<?php echo $sep; ?><a href="<?php the_permalink(); ?>" title="<?php the_title_attribute(); ?>"><?php the_title(); ?></a>
 						<?php $sep = ' &middot; '; ?>
 					<?php endwhile; ?>
 					</p>
 				<?php else : ?>
-					<p><?php _e( 'You do not like anything yet.', 'post-like' ); ?></p>
+					<p><?php _e( 'Not liked anything yet.', 'post-like' ); ?></p>
 				<?php endif; ?>
 				</td>
 			</tr>
