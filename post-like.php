@@ -111,6 +111,60 @@ class WP_Post_Like_System {
 		add_action( 'show_user_profile', array( $this, 'show_user_likes' ) );
 		add_action( 'edit_user_profile', array( $this, 'show_user_likes' ) );
 
+		// Add to content
+		add_action( 'the_content', array( $this, 'append_to_content' ), 2000 );
+
+	}
+
+	/**
+	 * Define allowed post types.
+	 *
+	 * @since 0.6
+	 *
+	 * @return array $content The modified content.
+	 */
+	public function allowed_post_types() {
+
+		// default to public post types
+		$post_types = get_post_types( array( 'public' => true ) );
+
+		/**
+		 * Allow post types to be filtered.
+		 *
+		 * @since 0.6
+		 *
+		 * @param array $post_types The default post types array.
+		 * @return array $post_types The modified post types array
+		 */
+		$post_types = apply_filters( 'wpls_get_post_types', $post_types );
+
+		// --<
+		return $post_types;
+
+	}
+
+	/**
+	 * Enqueue the stylesheets and scripts for the public-facing side of the site.
+	 *
+	 * @since 0.6
+	 *
+	 * @param str $content The existing content.
+	 * @return str $content The modified content.
+	 */
+	public function append_to_content( $content ) {
+
+		// Bail if not an allowed post type
+		if ( ! in_array( get_post_type(), $this->allowed_post_types() ) ) return $content;
+
+		// Bail if not singular
+		if ( ! is_singular( get_post_type() ) ) return $content;
+
+		// append button
+		$content .= $this->get_like_button( get_the_ID() );
+
+		// --<
+		return $content;
+
 	}
 
 	/**
@@ -119,6 +173,12 @@ class WP_Post_Like_System {
 	 * @since 0.6
 	 */
 	public function enqueue_scripts() {
+
+		// Bail if not an allowed post type
+		if ( ! in_array( get_post_type(), $this->allowed_post_types() ) ) return $content;
+
+		// Bail if not singular
+		if ( ! is_singular( get_post_type() ) ) return;
 
 		// enqueue Javascript
 		wp_enqueue_script(
@@ -327,8 +387,8 @@ class WP_Post_Like_System {
 	 * @return str The like button markup.
 	 */
 	public function shortcode() {
-		return wpls_get_simple_likes_button( get_the_ID(), 0 );
-	} // shortcode()
+		return $this->get_like_button( get_the_ID(), 0 );
+	}
 
 	/**
 	 * Utility to test if the post is already liked.
@@ -527,8 +587,21 @@ class WP_Post_Like_System {
 	 */
 	public function get_liked_icon() {
 
-		/* If already using Font Awesome with your theme, replace svg with: <i class="fa fa-heart"></i> */
+		// define icon markup
 		$icon = '<span class="sl-icon"><svg role="img" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0" y="0" viewBox="0 0 128 128" enable-background="new 0 0 128 128" xml:space="preserve"><path id="heart-full" d="M124 20.4C111.5-7 73.7-4.8 64 19 54.3-4.9 16.5-7 4 20.4c-14.7 32.3 19.4 63 60 107.1C104.6 83.4 138.7 52.7 124 20.4z"/>&#9829;</svg></span>';
+
+		/**
+		 * Allow icon to be filtered.
+		 *
+		 * If already using Font Awesome with your theme, you can use this filter
+		 * to replace the SVG with, for example, '<i class="fa fa-heart-o"></i>'
+		 *
+		 * @since 0.6
+		 *
+		 * @param str $icon The existing markup of the liked icon.
+		 * @return str $icon The modified markup of the liked icon.
+		 */
+		$icon = apply_filters( 'wpls_get_liked_icon', $icon );
 
 		// --<
 		return $icon;
@@ -544,8 +617,21 @@ class WP_Post_Like_System {
 	 */
 	public function get_unliked_icon() {
 
-		/* If already using Font Awesome with your theme, replace svg with: <i class="fa fa-heart-o"></i> */
+		// define icon markup
 		$icon = '<span class="sl-icon"><svg role="img" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0" y="0" viewBox="0 0 128 128" enable-background="new 0 0 128 128" xml:space="preserve"><path id="heart" d="M64 127.5C17.1 79.9 3.9 62.3 1 44.4c-3.5-22 12.2-43.9 36.7-43.9 10.5 0 20 4.2 26.4 11.2 6.3-7 15.9-11.2 26.4-11.2 24.3 0 40.2 21.8 36.7 43.9C124.2 62 111.9 78.9 64 127.5zM37.6 13.4c-9.9 0-18.2 5.2-22.3 13.8C5 49.5 28.4 72 64 109.2c35.7-37.3 59-59.8 48.6-82 -4.1-8.7-12.4-13.8-22.3-13.8 -15.9 0-22.7 13-26.4 19.2C60.6 26.8 54.4 13.4 37.6 13.4z"/>&#9829;</svg></span>';
+
+		/**
+		 * Allow icon to be filtered.
+		 *
+		 * If already using Font Awesome with your theme, you can use this filter
+		 * to replace the SVG with, for example, '<i class="fa fa-heart-o"></i>'
+		 *
+		 * @since 0.6
+		 *
+		 * @param str $icon The existing markup of the liked icon.
+		 * @return str $icon The modified markup of the liked icon.
+		 */
+		$icon = apply_filters( 'wpls_get_unliked_icon', $icon );
 
 		// --<
 		return $icon;
@@ -620,15 +706,16 @@ class WP_Post_Like_System {
 		$types = get_post_types( array( 'public' => true ) );
 
 		$args = array(
-		  'numberposts' => -1,
-		  'post_type' => $types,
-		  'meta_query' => array (
-			array (
-			  'key' => '_user_liked',
-			  'value' => $user->ID,
-			  'compare' => 'LIKE'
+			'numberposts' => -1,
+			'post_type' => $types,
+			'meta_query' => array(
+				array(
+					'key' => '_user_liked',
+					'value' => $user->ID,
+					'compare' => 'LIKE'
+				)
 			)
-		  ) );
+		);
 
 		$sep = '';
 
@@ -675,7 +762,6 @@ function wp_post_like_system() {
 
 // init plugin
 add_action( 'plugins_loaded', 'wp_post_like_system' );
-
 
 /**
  * Utility to test if the post is already liked.
