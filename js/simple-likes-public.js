@@ -23,8 +23,8 @@
 					is_comment : iscomment,
 				},
 				beforeSend:function(){
-					loader.html('&nbsp;<div class="loader">Loading...</div>');
-				},	
+					loader.html('&nbsp;<span class="loader">Loading...</span>');
+				},
 				success: function(response){
 					var icon = response.icon;
 					var count = response.count;
@@ -38,10 +38,10 @@
 						allbuttons.prop('title', unlike_text);
 						allbuttons.addClass('liked');
 					}
-					loader.empty();					
+					loader.empty();
 				}
 			});
-			
+
 		}
 		return false;
 	});
